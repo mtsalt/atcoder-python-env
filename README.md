@@ -1,43 +1,57 @@
 # atcoder-python-env
 A Dockerized Python environment for running AtCoder problems locally. Includes pre-configured dependencies and tools for seamless local testing.
 
-# Requirements
-- Docker (version 27.1.2 or higher)
+## Prerequisites
+1. Docker
+    - Docker (**version 20.10 or higher**) must be installed and running on your system. Follow the [official Docker installation guide](https://docs.docker.com/get-docker/) to install Docker.
+1. Custom template
+    - If you want to use atcoder-tools' default template, update `.atcodertools.toml` as follows:
+    ``` toml
+    [codestyle]
+    lang = 'python'
+    #template_file='~/my_template.py'
+    workspace_dir='~/atcoder-workspace/'
+    ```
+    > Comment out the line `template_file='~/my_template.py'` if you do not wish to use a custom template.
+## Installation
+1. Clone this repository 
+    ``` bash
+    git clone https://github.com/mtsalt/atcoder-python-env.git
+    ```
+1. Change directory to `atcoder-python-env`
+    ``` bash
+    cd atcoder-python-env
+    ```
+1. docker build 
+    ``` bash
+    docker image build --build-arg USER_ID=$(id -u) --build-arg USER_GROUP=$(id -g) -t atcoder-env . 
+    ```
 
-# How to use
-You can set up the environment just by copying and pasting.
+## Usage
+1. Change directory to the desired directory
+    ``` bash
+    cd [your desired directory]
+    ```
+1. Run the Docker container
+    ``` bash
+    docker run -it -v ./:/home/envuser/atcoder-workspace/ --rm --name atcoder-env-container atcoder-env /bin/bash
+    ```
+1. Solve Probles using atcoder-tools 
+    - [atcoder-tools repository](https://github.com/kyuridenamida/atcoder-tools)
 
-1. Build Environment
-    1. Build Image 
-        ```
-        docker image build -t atcoder-python .
-        ```
-        - -t : Build image as atcoder-python
-    1. Run Container  
-        ```
-        docker container run -itd --rm --name atcoder-python-env -v ./solutions:/root/atcoder-workspace atcoder-python
-        ```
-        - --rm : Delete the container when it is stopped.
-        - -v : Mount the `solutions` directory from the host to `atcoder-workspace` in the guest.
-    1. Attach Container  
-        ```
-        docker container exec -it atcoder-python-env /bin/bash
-        ```
-1. Generate Contest Directory
-    1. Initialize Contest
-        ```
-        atcoder-tools gen abc[contest number]
-        ```
-    1. test
-        ```
-        atcoder-tools test
-        ```
-1. Delete Environment
-    1. Delete Container
-        ```
-        docker container stop atcoder-python-env
-        ```
-    1. Delete Image
-        ```
-        docker image rm atcoder-python
-        ```
+## Example Commands
+- Create Environment
+    ``` bash
+    git clone https://github.com/mtsalt/atcoder-python-env.git
+    cd atcoder-python-env
+    docker image build --build-arg USER_ID=$(id -u) --build-arg USER_GROUP=$(id -g) -t atcoder-env . 
+    cd ../atcoder-solutions
+    docker run -it -v ./:/home/envuser/atcoder-workspace/ --rm --name atcoder-env-container atcoder-env /bin/bash
+    ```
+- Solve Problem
+    ``` bash
+    atcoder-tools gen abc345
+    cd abc345/A
+    atcoder-tools test
+    atcoder-tools submit
+    ```
